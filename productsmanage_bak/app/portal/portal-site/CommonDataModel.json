@@ -1,0 +1,120 @@
+{
+  "_version": "3.0.0",
+  "identification": {
+    "title": "productsmanage",
+    "id": "productsmanage-flp",
+    "entityType": "bundle"
+  },
+  "payload": {
+    "catalogs": [
+      {
+        "_version": "3.0.0",
+        "identification": {
+          "id": "productsmanage-catalog",
+          "title": "{{title}}",
+          "entityType": "catalog",
+          "i18n": "i18n/catalog.properties"
+        },
+        "payload": {
+          "viz": [
+            {
+              "appId": "productsmanage.admin-authors",
+              "vizId": "Authors-manage"
+            },
+            {
+              "appId": "productsmanage.admin-books",
+              "vizId": "Books-manage"
+            },
+            {
+              "appId": "productsmanage.browse",
+              "vizId": "Books-display"
+            },
+            {
+              "appId": "productsmanage.genres",
+              "vizId": "Genres-display"
+            }
+          ]
+        }
+      }
+    ],
+    "groups": [
+      {
+        "_version": "3.0.0",
+        "identification": {
+          "id": "productsmanage-group",
+          "title": "{{title}}",
+          "entityType": "group",
+          "i18n": "i18n/group.properties"
+        },
+        "payload": {
+          "viz": [
+            {
+              "id": "productsmanageadmin-authors-001",
+              "appId": "productsmanage.admin-authors",
+              "vizId": "Authors-manage"
+            },
+            {
+              "id": "productsmanageadmin-books-001",
+              "appId": "productsmanage.admin-books",
+              "vizId": "Books-manage"
+            },
+            {
+              "id": "productsmanagebrowse-001",
+              "appId": "productsmanage.browse",
+              "vizId": "Books-display"
+            },
+            {
+              "id": "productsmanagegenres-001",
+              "appId": "productsmanage.genres",
+              "vizId": "Genres-display"
+            }
+          ]
+        }
+      }
+    ],
+    "sites": [
+      {
+        "_version": "3.0.0",
+        "identification": {
+          "id": "productsmanage-site",
+          "entityType": "site",
+          "title": "productsmanage",
+          "description": "A simple CAP project."
+        },
+        "payload": {
+          "config": {
+            "ushellConfig": {
+              "renderers": {
+                "fiori2": {
+                  "componentData": {
+                    "config": {
+                      "applications": {
+                        "Shell-home": {}
+                      },
+                      "enableSearch": true,
+                      "enablePersonalization": true,
+                      "enableSetTheme": true,
+                      "enableSetLanguage": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "groupsOrder": ["productsmanage-group"],
+          "sap.cloud.portal": {
+            "config": {
+              "theme.id": "sap_horizon",
+              "theme.active": [
+                "sap_horizon",
+                "sap_horizon_dark",
+                "sap_horizon_hcw",
+                "sap_horizon_hcb"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}
