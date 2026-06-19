@@ -9,7 +9,7 @@ build-parameters:
   before-all:
     - builder: custom
       commands:
-        - npm ci
+        - npm install
         - npx cds build --production
 modules:
   - name: productsmanage-srv
@@ -26,20 +26,20 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: productsmanage-auth
-      - name: productsmanage-db
-      - name: productsmanage-redis
+      # - name: productsmanage-db
+      # - name: productsmanage-redis
       - name: productsmanage-connectivity
       - name: productsmanage-destination
       - name: productsmanage-logging
-      - name: productsmanage-auditlog
+      # - name: productsmanage-auditlog
 
   - name: productsmanage-db-deployer
     type: hdb
     path: gen/db
     parameters:
       buildpack: nodejs_buildpack
-    requires:
-      - name: productsmanage-db
+    # requires:
+    #   - name: productsmanage-db
   - name: productsmanage
     type: approuter.nodejs
     path: app/router
@@ -57,7 +57,7 @@ modules:
       - name: productsmanage-auth
       - name: productsmanage-destination
       - name: productsmanage-html5-runtime
-      - name: productsmanage-portal
+      # - name: productsmanage-portal
       - name: productsmanage-logging
     provides:
       - name: app-api
@@ -103,7 +103,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
-        - npm ci
+        - npm install
         - npm run build
       supported-platforms:
         []
@@ -114,7 +114,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
-        - npm ci
+        - npm install
         - npm run build
       supported-platforms:
         []
@@ -125,7 +125,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
-        - npm ci
+        - npm install
         - npm run build
       supported-platforms:
         []
@@ -136,7 +136,7 @@ modules:
       build-result: dist
       builder: custom
       commands:
-        - npm ci
+        - npm install
         - npm run build
       supported-platforms:
         []
@@ -145,13 +145,13 @@ modules:
     type: com.sap.application.content
     path: app/portal
     requires:
-      - name: productsmanage-portal
-        parameters:
-          content-target: true
-          service-key:
-            name: productsmanage-portal-key
-            config:
-              content-endpoint: developer
+      # - name: productsmanage-portal
+      #   parameters:
+      #     content-target: true
+      #     service-key:
+      #       name: productsmanage-portal-key
+      #       config:
+      #         content-endpoint: developer
       - name: productsmanage-auth
       - name: productsmanage-html5-repo-host
       - name: productsmanage-app-deployer
@@ -196,16 +196,16 @@ resources:
               - '$XSAPPNAME.admin'
     requires:
       - name: app-api
-  - name: productsmanage-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-  - name: productsmanage-redis
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: redis-cache
-      service-plan: standard
+  # - name: productsmanage-db
+  #   type: com.sap.xs.hdi-container
+  #   parameters:
+  #     service: hana
+  #     service-plan: hdi-shared
+  # - name: productsmanage-redis
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: redis-cache
+  #     service-plan: trial
       # config:
       # memory: 2 # GB, can be 2 or 4
       # multi_az: true
@@ -238,18 +238,18 @@ resources:
     parameters:
       service: html5-apps-repo
       service-plan: app-runtime
-  - name: productsmanage-portal
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: portal
-      service-plan: standard
+  # - name: productsmanage-portal
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: portal
+  #     service-plan: standard
   - name: productsmanage-logging
     type: org.cloudfoundry.managed-service
     parameters:
       service: application-logs
-      service-plan: standard
-  - name: productsmanage-auditlog
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: auditlog
-      service-plan: premium
+      service-plan: lite
+  # - name: productsmanage-auditlog
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: auditlog
+  #     service-plan: default

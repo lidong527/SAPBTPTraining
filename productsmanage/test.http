@@ -1,0 +1,20 @@
+### 查询产品
+GET http://localhost:4004/odata/v4/admin/Products
+
+### 激活产品
+POST http://localhost:4004/odata/v4/admin/activateProduct
+
+Content-Type: application/json
+
+{
+  "ID":"..."
+}
+
+### 查询统计
+GET http://localhost:4004/odata/v4/admin/ProductStatistics
+
+### 查询图书
+GET http://localhost:4004/odata/v4/catalog/Books
+
+### 查询图书，过滤条件
+GET http://localhost:4004/odata/v4/catalog/Books?$filter=ID eq '...'
