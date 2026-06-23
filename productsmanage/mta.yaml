@@ -20,6 +20,12 @@ modules:
       buildpack: nodejs_buildpack
     build-parameters:
       builder: npm-ci
+      # build-result: dist
+      # builder: custom
+      # commands:
+      #   - npm install
+      #   - npm run build
+
     provides:
       - name: srv-api # required by consumers of CAP services (e.g. approuter)
         properties:
@@ -33,13 +39,13 @@ modules:
       - name: productsmanage-logging
       # - name: productsmanage-auditlog
 
-  - name: productsmanage-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    # requires:
-    #   - name: productsmanage-db
+      # - name: productsmanage-db-deployer
+      #   type: hdb
+      #   path: gen/db
+      #   parameters:
+      #     buildpack: nodejs_buildpack
+      #   # requires:
+      #   #   - name: productsmanage-db
   - name: productsmanage
     type: approuter.nodejs
     path: app/router
@@ -95,6 +101,16 @@ modules:
           content-target: true
           config:
             HTML5Runtime_enabled: true
+    parameters:
+      config:
+        destinations:
+          - Name: srv-api
+            URL: ~{srv-api/srv-url}
+            Authentication: NoAuthentication
+            Type: HTTP
+            ProxyType: Internet
+            HTML5.ForwardAuthToken: true
+            HTML5.DynamicDestination: true
 
   - name: productsmanageadminauthors
     type: html5
@@ -105,6 +121,7 @@ modules:
       commands:
         - npm install
         - npm run build
+        - npm ci
       supported-platforms:
         []
   - name: productsmanageadminbooks
@@ -116,6 +133,7 @@ modules:
       commands:
         - npm install
         - npm run build
+        - npm ci
       supported-platforms:
         []
   - name: productsmanagebrowse
@@ -127,6 +145,7 @@ modules:
       commands:
         - npm install
         - npm run build
+        - npm ci
       supported-platforms:
         []
   - name: productsmanagegenres
@@ -138,6 +157,7 @@ modules:
       commands:
         - npm install
         - npm run build
+        - npm ci
       supported-platforms:
         []
 
@@ -157,6 +177,26 @@ modules:
       - name: productsmanage-app-deployer
     deployed-after:
       - productsmanage-app-deployer
+  # - name: notification-content-deployment
+  #   type: nodejs
+  #   path: gen/srv
+  #   parameters:
+  #     no-route: true
+  #     no-start: true
+  #     memory: 256MB
+  #     disk-quota: 1GB
+  #     tasks:
+  #       - name: notification-content-deployment
+  #         command: "node node_modules/@cap-js/notifications/lib/content-deployment.js"
+  #         memory: 256MB
+  #         disk-quota: 1GB
+  #   requires:
+  #     - name: productsmanage-destination
+  #   provides:
+  #     - name: srv-api # required by consumers of CAP services (e.g. approuter)
+  #       properties:
+  #         srv-url: ${default-url}
+
   - name: notification-content-deployment
     type: nodejs
     path: gen/srv
@@ -172,6 +212,76 @@ modules:
           disk-quota: 1GB
     requires:
       - name: productsmanage-destination
+
+  # - name: productsmanage-destinations
+  #   type: com.sap.application.content
+  #   requires:
+  #     - name: productsmanage-auth
+  #       parameters:
+  #         service-key:
+  #           name: productsmanage-auth-key
+  #     - name: productsmanage-html5-repo-host
+  #       parameters:
+  #         service-key:
+  #           name: productsmanage-html5-repo-host-key
+  #     - name: srv-api
+  #     - name: productsmanage-destination
+  #       parameters:
+  #         content-target: true
+  #   build-parameters:
+  #     no-source: true
+  #   parameters:
+  #     content:
+  #       instance:
+  #         existing_destinations_policy: update
+  #         HTML5Runtime_enabled: true
+  #         destinations:
+  #           - Name: productsmanage-html5-repository
+  #             ServiceInstanceName: productsmanage-html5-repo-host
+  #             ServiceKeyName: productsmanage-html5-repo-host-key
+  #             sap.cloud.service: productsmanage.service
+  #           - Name: productsmanage-auth
+  #             Authentication: OAuth2UserTokenExchange
+  #             ServiceInstanceName: productsmanage-auth
+  #             ServiceKeyName: productsmanage-auth-key
+  #             sap.cloud.service: productsmanage.service
+
+  - name: productsmanage-destinations
+    type: com.sap.application.content
+    requires:
+      - name: productsmanage-destination
+        parameters:
+          content-target: true
+
+      - name: productsmanage-auth
+        parameters:
+          service-key:
+            name: productsmanage-auth-key
+
+      - name: productsmanage-html5-repo-host
+        parameters:
+          service-key:
+            name: productsmanage-html5-repo-host-key
+
+    build-parameters:
+      no-source: true
+
+    parameters:
+      content:
+        subaccount:
+          existing_destinations_policy: update
+          # HTML5Runtime_enabled: true
+          destinations:
+            - Name: productsmanage_html5_repo_host
+              ServiceInstanceName: productsmanage-html5-repo-host
+              ServiceKeyName: productsmanage-html5-repo-host-key
+              sap.cloud.service: productsmanage.service
+
+            - Name: productsmanage_auth
+              Authentication: OAuth2UserTokenExchange
+              ServiceInstanceName: productsmanage-auth
+              ServiceKeyName: productsmanage-auth-key
+              sap.cloud.service: productsmanage.service
 
 resources:
   - name: productsmanage-auth
@@ -196,16 +306,16 @@ resources:
               - '$XSAPPNAME.admin'
     requires:
       - name: app-api
-  # - name: productsmanage-db
-  #   type: com.sap.xs.hdi-container
-  #   parameters:
-  #     service: hana
-  #     service-plan: hdi-shared
-  # - name: productsmanage-redis
-  #   type: org.cloudfoundry.managed-service
-  #   parameters:
-  #     service: redis-cache
-  #     service-plan: trial
+      # - name: productsmanage-db
+      #   type: com.sap.xs.hdi-container
+      #   parameters:
+      #     service: hana
+      #     service-plan: hdi-shared
+      # - name: productsmanage-redis
+      #   type: org.cloudfoundry.managed-service
+      #   parameters:
+      #     service: redis-cache
+      #     service-plan: trial
       # config:
       # memory: 2 # GB, can be 2 or 4
       # multi_az: true
@@ -227,6 +337,8 @@ resources:
     parameters:
       service: destination
       service-plan: lite
+    requires:
+      - name: srv-api
 
   - name: productsmanage-html5-repo-host
     type: org.cloudfoundry.managed-service

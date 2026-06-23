@@ -1,0 +1,14 @@
+Getting list of files for HTML5 application productsmanageadminbooks in org b39fa406trial / space mytestSp03 as 531935610@qq.com...
+OK
+
+path   
+/productsmanageadminbooks-1.0.0/Component-dbg.js   
+/productsmanageadminbooks-1.0.0/Component-preload.js   
+/productsmanageadminbooks-1.0.0/Component-preload.js.map   
+/productsmanageadminbooks-1.0.0/Component.js   
+/productsmanageadminbooks-1.0.0/Component.js.map   
+/productsmanageadminbooks-1.0.0/i18n/i18n.properties   
+/productsmanageadminbooks-1.0.0/i18n/i18n_de.properties   
+/productsmanageadminbooks-1.0.0/i18n/i18n_en.properties   
+/productsmanageadminbooks-1.0.0/manifest.json   
+/productsmanageadminbooks-1.0.0/xs-app.json   

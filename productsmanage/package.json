@@ -3,16 +3,15 @@
   "version": "1.0.0",
   "dependencies": {
     "@cap-js/audit-logging": ">=0",
-    "@cap-js/hana": "^2",
     "@cap-js/notifications": "*",
     "@sap/cds": "^9.9.1",
     "@sap/xssec": "^4",
+    "@cap-js/sqlite": "^2.4",
     "redis": "^5.0.0"
   },
   "devDependencies": {
     "@cap-js/cds-typer": "^0.39.1",
     "@cap-js/cds-types": "^0.17.0",
-    "@cap-js/sqlite": "^2.4",
     "@sap/cds-dk": "^9",
     "@types/node": "^25.9.3",
     "ts-node": "^10.9.2",
@@ -29,14 +28,20 @@
       "[production]": {
         "auth": "xsuaa"
       },
-      "messaging": {
-        "kind": "local-messaging"
+      "db": {
+        "kind": "sqlite"
       },
-      "connectivity": true,
       "destinations": true,
       "html5-repo": true,
-      "portal": true,
-      "application-logging": true
-    }
+      "workzone": true
+    },
+    "messaging": {
+      "kind": "local-messaging"
+    },
+    "connectivity": true,
+    "destinations": true,
+    "html5-repo": true,
+    "portal": true,
+    "application-logging": true
   }
 }

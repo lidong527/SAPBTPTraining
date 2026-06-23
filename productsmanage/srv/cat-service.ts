@@ -1,11 +1,11 @@
 import cds from '@sap/cds'
-import { Books } from '#cds-models/CatalogService'
+// import { Books } from '#cds-models/CatalogService'
 
 module.exports = class CatalogService extends cds.ApplicationService {
   init() {
 
     //const { Books } = cds.entities('sap.capire.bookshop')
-    const { ListOfBooks } = this.entities
+    const { Books, ListOfBooks, stock } = this.entities
 
     // Add some discount for overstocked books
     this.after('each', ListOfBooks!, book => {
@@ -18,7 +18,7 @@ module.exports = class CatalogService extends cds.ApplicationService {
       // let book = await SELECT.one.from (Books!, id, b => b.stock)
 
       const book = await SELECT.one
-        .from(Books)
+        .from(Books!)
         .where({ ID: id })
 
       if (!book) {
@@ -37,7 +37,30 @@ module.exports = class CatalogService extends cds.ApplicationService {
       if (!book.stock || quantity > book.stock) return req.error(409, `${quantity} exceeds stock for book #${id}`)
 
       // Reduce stock in database and return updated stock value
-      await UPDATE(Books, id).with({ stock: book.stock -= quantity })
+      // await UPDATE(Books, id).with({ stock: book.stock -= quantity })
+      // return book
+
+      const newStock = book.stock - quantity
+
+      await UPDATE.entity(Books!)
+        .where({ ID: id })
+        .with({
+          stock: newStock
+        })
+
+      // .set({
+      //   STOCK: newStock //100 //(book.stock ?? 0) - quantity
+      // })
+
+      // .set({
+      //   stock: newStock
+      // })
+      // .with({
+      //   stock: book.stock - quantity
+      // })
+
+      book.stock -= quantity
+
       return book
     })
 
